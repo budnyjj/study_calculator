@@ -2,6 +2,11 @@ import re
 import math
 import definitions
 
+def CorrectorError(Exception):
+    def __init__(self, expr, msg):
+        self.expr = expr
+        self.msg = msg
+
 class Corrector(object):
     def __init__(self):
         self._expr = ""
@@ -11,7 +16,8 @@ class Corrector(object):
             [ re.escape(const) for const in sorted(definitions._constants, key=lambda const: len(const), reverse=True)] \
                                    ) + ')'
         self.functionR = '(' + '|'.join( \
-            [ re.escape(func) for func in sorted(definitions._functions, key=lambda func: len(func), reverse=True)] \
+            [ re.escape(func) for func in sorted(definitions.
+_functions, key=lambda func: len(func), reverse=True)] \
                                    ) + ')'
         self.numberR = definitions._number.regex
         self.constantM = re.compile(self.constantR)
@@ -51,11 +57,9 @@ class Corrector(object):
             if result.start() not in self._funcPos:
                 insertPos.append(result.start() + 1)
 
-
         cBracketOBracketM = re.compile(re.escape(')('))
         for result in re.finditer(cBracketOBracketM, self._expr):
             insertPos.append(result.start() + 1)
-
 
         numberConstM = re.compile(self.numberR + self.constantR)
         for result in re.finditer(numberConstM, self._expr):
@@ -70,7 +74,7 @@ class Corrector(object):
             insertPos.append(firstComponentEndPos)
 
         constConstM = re.compile(self.constantR + self.constantR)
-        for result in re.finditer(constConstM, self._expr):
+        for result in finditerOverlap(constConstM, self._expr):
             if result.start() not in self._funcPos:
                 # find end of first component
                 firstComponentEndPos = self.constantM.match(self._expr, result.start()).end()
@@ -170,22 +174,19 @@ class Corrector(object):
         unaryMinusBasicM = re.compile(unaryMinusBasicR)
         minusPredecessorsM = re.compile('|'.join(minusPredecessors))
 
-        _exprList = list(self._expr)
-
         offset = 0
         for result in re.finditer(unaryMinusBasicM, self._expr):
+            # print result.end(), ':', offset, ':', self._expr
             curUnaryMinusPos = 0
             if result.start() > 0:
-                curUnaryMinusPos = minusPredecessorsM.match(self._expr, result.start()).end() 
-            # print result.start(), ":", curUnaryMinusPos
-            _exprList.insert(curUnaryMinusPos + offset, '(')
-            _exprList.insert(curUnaryMinusPos + offset + 1, '0')
+                curUnaryMinusPos = minusPredecessorsM.match( \
+                self._expr, result.start() + offset).end()
+            self._expr = self._expr[:curUnaryMinusPos] + '(0' + \
+                         self._expr[curUnaryMinusPos:]
             offset += 2
-            _exprList.insert(result.end() + offset, ')')
+            self._expr = self._expr[:result.end() + offset] + ')' + \
+                         self._expr[result.end() + offset:]
             offset += 1
-
-
-        self._expr = ''.join(_exprList)
 
         # with brackets
         minusSuccessors = []
@@ -198,15 +199,18 @@ class Corrector(object):
                            '(' + '|'.join(minusSuccessors) + ')'
         unaryMinusBracketM = re.compile(unaryMinusBracketR)
 
+        # have to use while because self._expr
+        # changes after each substitution
         result = unaryMinusBracketM.search(self._expr)
         while result:
             curUnaryMinusPos = 0
             if result.start() > 0:
                 curUnaryMinusPos = minusPredecessorsM.match(self._expr, result.start()).end() 
-            _exprList.insert(curUnaryMinusPos, '(')
-            _exprList.insert(curUnaryMinusPos + 1, '0')
+            self._expr = self._expr[:curUnaryMinusPos] + '(0' + \
+                         self._expr[curUnaryMinusPos:]
+            offset = 2
             # find balanced brackets end position
-            lastBracketPos = result.end()
+            lastBracketPos = result.end() + offset
             bracketCounter = 1
             while bracketCounter > 0:
                 if self._expr[lastBracketPos] == '(':
@@ -214,13 +218,9 @@ class Corrector(object):
                 elif self._expr[lastBracketPos] == ')':
                     bracketCounter -= 1
                 lastBracketPos += 1
-            # insert index + 2 --> length of "(0" == 2
-            _exprList.insert(lastBracketPos + 2, ')')
-
-            self._expr = ''.join(_exprList)
+            self._expr = self._expr[:lastBracketPos] + ')' + \
+                         self._expr[lastBracketPos:]
             result = unaryMinusBracketM.search(self._expr)
-
-        self._expr = ''.join(_exprList)
 
     def correct(self, iExpr):
         self._expr = iExpr.replace(' ', '').lower()
@@ -231,3 +231,9 @@ class Corrector(object):
         self._unaryMinusReduce()
         return self._expr
 
+
+def finditerOverlap(matcher, iExpr):
+    result = matcher.search(iExpr)
+    while result:
+        yield result
+        result = matcher.search(iExpr, result.start() + 1)

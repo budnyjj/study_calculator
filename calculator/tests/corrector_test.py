@@ -34,6 +34,11 @@ class TestCorrector(unittest.TestCase):
         self.assertEqual(self.corrector._expr, \
                          ".123*(3.123+.321)*(2.321+.123)*2.321*e*(.123+2.321)*(.123*log10(e*e))*pi*.321")
 
+        self.corrector._expr = "eee"
+        self.corrector._shortMultiplication()
+        self.assertEqual(self.corrector._expr, "e*e*e")
+
+
     def testConstInterpolation(self):
         self.corrector._expr = "e*e*e*pi*expi()*pi"
         self.corrector._constInterpolation()

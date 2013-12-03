@@ -1,6 +1,11 @@
 import re
 import definitions
 
+def ParserError(Exception):
+    def __init__(self, expr, pos):
+        self.expr = expr
+        self.pos = pos
+
 class Parser(object):
     def __init__(self):
         self.numberM = definitions.Identifier(
@@ -38,5 +43,6 @@ class Parser(object):
                             definitions.Identifier(type = matcher.type, val = result.group(0)))
                     curPos = result.end()
                     break
-
+            # need to place error raising here!
+            raise ParserError(iExpr, curPos)
         return parsedExpr
