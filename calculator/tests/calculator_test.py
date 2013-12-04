@@ -20,5 +20,9 @@ class TestCalculate(unittest.TestCase):
         iExpr = "1/sqrt(-1)"
         self.assertRaises(ValueError, self.calculator.calculate, iExpr)
 
+    def testSingleton(self):
+        anotherCalculator = calculator.Calculator()
+        self.assertIs(self.calculator, anotherCalculator)
+
 if __name__ == '__main__':
     unittest.main()

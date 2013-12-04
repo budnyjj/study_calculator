@@ -1,8 +1,11 @@
+from singleton import singleton
+
 import corrector
 import parser
 import converter
 import evaluator
 
+@singleton
 class Calculator(object):
     def __init__(self):
         self.corrector = corrector.Corrector()
