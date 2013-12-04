@@ -13,5 +13,12 @@ class TestCalculate(unittest.TestCase):
         iExpr = "10*e^0*log10(.4*-5/-0.1-10)--abs(-53//10)+-5"
         self.assertEqual(self.calculator.calculate(iExpr), 11) # exactly!
 
+    def testMathErrors(self):
+        iExpr = "1/0"
+        self.assertRaises(ZeroDivisionError, self.calculator.calculate, iExpr)
+
+        iExpr = "1/sqrt(-1)"
+        self.assertRaises(ValueError, self.calculator.calculate, iExpr)
+
 if __name__ == '__main__':
     unittest.main()

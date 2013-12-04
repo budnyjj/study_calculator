@@ -1,10 +1,15 @@
 import re
 import definitions
 
-def ParserError(Exception):
-    def __init__(self, expr, pos):
-        self.expr = expr
-        self.pos = pos
+class ParseError(Exception):
+    def __init__(self, eExpr, ePos):
+        self.expr = eExpr
+        self.pos = ePos
+    def __str__(self):
+        msg = 'unknown token at ' + str(self.pos) + ': \n'
+        msg += self.expr + '\n'
+        msg += ''.join([' ' for i in xrange(self.pos - 1)]) + '---'
+        return msg
 
 class Parser(object):
     def __init__(self):
@@ -43,6 +48,7 @@ class Parser(object):
                             definitions.Identifier(type = matcher.type, val = result.group(0)))
                     curPos = result.end()
                     break
-            # need to place error raising here!
-            raise ParserError(iExpr, curPos)
+                elif matcher == self.matchers[-1]:
+                    # can't find suitable matcher
+                    raise ParseError(iExpr, curPos)
         return parsedExpr

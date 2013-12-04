@@ -2,10 +2,9 @@ import re
 import math
 import definitions
 
+# basic error
 def CorrectorError(Exception):
-    def __init__(self, expr, msg):
-        self.expr = expr
-        self.msg = msg
+    pass
 
 class Corrector(object):
     def __init__(self):

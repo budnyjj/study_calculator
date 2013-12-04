@@ -1,5 +1,9 @@
 import definitions
 
+class ConvertError(Exception):
+    def __str__(self):
+        return 'cannot convert input expression to RPN due to mismatched parentheses'
+
 class Converter(object):
     def __init__(self):
         pass
@@ -45,22 +49,17 @@ class Converter(object):
     	                convertedExpr.append(stack.pop())
     	            else:
     	                break
-    	        if (stack[-1].type != 'lb'):
-    	            print "Error: parentheses mismatched!"
-    	            return ()
+    	        if (len(stack) == 0):
+                    raise ConvertError()
     	        else:
     	            stack.pop()
     	        if (len(stack) > 0):
     	            if (stack[-1].type == 'func'):
     	                convertedExpr.append(stack.pop())
-    	    else:
-    	        print "Error: unknown token: ", ident
-    	        return ()
     	
     	while (len(stack) > 0):
     	    if stack[-1].type in ('lb', 'rb'):
-    	        print "Error: parentheses mismatched!"
-    	        return ()
+                raise ConvertError()
     	    convertedExpr.append(stack.pop())
     	
     	return convertedExpr

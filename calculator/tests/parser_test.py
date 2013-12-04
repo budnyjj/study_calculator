@@ -61,5 +61,9 @@ class TestParser(unittest.TestCase):
         self.assertEqual(oExpr[5].type, 'rb') 
         self.assertEqual(oExpr[5].val, ')')
 
+    def testParseError(self):
+        iExpr = "2e3"
+        self.assertRaises(parser.ParseError, self.parser.parse, iExpr)
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,10 +1,17 @@
 import definitions
 
+class EvaluateError(Exception):
+    def __init__(self, eIdent, eArgCount, argCount):
+        self.ident = eIdent
+        self.eArgCount = eArgCount
+        self.argCount = argCount
+
+    def __str__(self):
+        msg = 'too less arguments for ' + str(self.ident) + ' -- ' 
+        msg += 'requires: ' + str(self.argCount) + ', provided: ' + str(self.eArgCount)
+        return msg
 
 class Evaluator(object):
-    def __init__(self):
-        pass
-
     def _eval(self, iArgs):
         '''
         @iExpr -- list, describes function or operator (iExpr[0]) with its arguments (iExpr[>0])
@@ -20,7 +27,7 @@ class Evaluator(object):
     
     def evaluate(self, iExpr):
         '''
-        @iExpr -- math string in RPN (tuple)
+        @iExpr -- math string in RPN (list)
         This function computes @iExpr
         Return value: int or float or bool 
         '''
@@ -36,8 +43,7 @@ class Evaluator(object):
                     nArgs = definitions._functions[ident.val].argCount
                 args = []
                 if (len(stack) < nArgs):
-                    print "Error: too less arguments!"
-                    return False
+                    raise EvaluateError(ident.val, len(stack), nArgs)
                 else:
                     for i in range(nArgs):
                         args.append(stack.pop().val)
