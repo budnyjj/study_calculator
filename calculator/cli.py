@@ -1,5 +1,6 @@
 #!/usr/bin/python2
 
+import logging
 import calculator as calc
 
 def main():
@@ -13,17 +14,17 @@ def main():
 
                 while (iExpr != ''):
                         try:
-                                oExpr = c.calculate(iExpr, 'warning')
+                                oExpr = c.calculate(iExpr, 'error')
                         except calc.parser.ParseError as e:
-                                print "ParseError:", e
+                                logging.error("ParseError: " + str(e))
                         except calc.converter.ConvertError as e:
-                                print "ConvertError:", e
+                                logging.error("ConvertError: " + str(e))
                         except calc.evaluator.EvaluateError as e:
-                                print "EvaluateError:", e
+                                logging.error("EvaluateError: " + str(e))
                         except ArithmeticError as e:
-                                print "ArithmeticError:", e
+                                logging.error("ArithmeticError: " + str(e))
                         except ValueError as e:
-                                print "ValueError:", e
+                                logging.error("ValueError: " + str(e))
                         else:
                                 print oExpr
 
