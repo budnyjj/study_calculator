@@ -1,3 +1,5 @@
+import logging
+from collections import defaultdict
 import re
 import definitions
 
@@ -33,6 +35,9 @@ class Parser(object):
         @iExpr -- string to parse
         @parsedExpr -- output parsed expression
         '''
+
+        statMsg = 'Parser started.\n'
+        
         parsedExpr = []
         curPos = 0
 
@@ -51,4 +56,22 @@ class Parser(object):
                 elif matcher == self.matchers[-1]:
                     # can't find suitable matcher
                     raise ParseError(iExpr, curPos)
+
+        debugMsg = 'Parser IO:\n'
+        debugMsg += 'Input: ' + iExpr + ',\n'
+        debugMsg += 'Output: ' + ', '.join([ str(ident.val) for ident in parsedExpr ]) + '.'
+
+        logging.debug(debugMsg)
+        
+        parseStat = defaultdict(int)
+        for ident in parsedExpr:
+            parseStat[ident.type] += 1
+
+        statMsg += 'Parser statistics: \n'
+        statMsg += '- ' + str(parseStat['op']) + ' operators,\n'
+        statMsg += '- ' + str(parseStat['func']) + ' functions,\n'
+        statMsg += '- ' + str(parseStat['lb']) + ' opening brackets,\n'
+        statMsg += '- ' + str(parseStat['rb']) + ' closing brackets.'
+        logging.info(statMsg)
+
         return parsedExpr

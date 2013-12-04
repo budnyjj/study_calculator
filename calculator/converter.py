@@ -1,3 +1,5 @@
+import logging
+
 import definitions
 
 class ConvertError(Exception):
@@ -13,6 +15,8 @@ class Converter(object):
         @iExpr -- parsed math string (list)
         This function converts @iExpr to list in RPN
         '''
+        logging.info('Converter started.')
+
     	stack = []
     	convertedExpr = []
     	
@@ -62,4 +66,10 @@ class Converter(object):
                 raise ConvertError()
     	    convertedExpr.append(stack.pop())
     	
+        debugMsg = 'Converter IO:\n'
+        debugMsg += 'Input: ' + ', '.join([ str(ident.val) for ident in iExpr ]) + ',\n'
+        debugMsg += 'Output: ' + ', '.join([ str(ident.val) for ident in convertedExpr ]) + '.'
+
+        logging.debug(debugMsg)
+
     	return convertedExpr

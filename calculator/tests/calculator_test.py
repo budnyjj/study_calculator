@@ -1,5 +1,4 @@
-#!/usr/bin/python2
-
+import logging
 import unittest
 import calculator.calculator as calculator
 
@@ -25,4 +24,5 @@ class TestCalculate(unittest.TestCase):
         self.assertIs(self.calculator, anotherCalculator)
 
 if __name__ == '__main__':
+    logging.basicConfig(filename='./calculator_test.log', level=logging.DEBUG)
     unittest.main()

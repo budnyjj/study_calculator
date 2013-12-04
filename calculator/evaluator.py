@@ -1,3 +1,4 @@
+import logging
 import definitions
 
 class EvaluateError(Exception):
@@ -18,12 +19,17 @@ class Evaluator(object):
         Return value: Identifier -- result of evaluating 
         '''
         op = iArgs[0]
+        result = False
         if op in definitions._operators.keys():
-            return definitions._operators[op].alg(iArgs[1:])
+            result = definitions._operators[op].alg(iArgs[1:])
+            logging.debug('Evaluate operator: ' + op + ', arguments: ' + \
+                          ', '.join([ str(arg) for arg in iArgs[1:] ]) + ';')
         elif op in definitions._functions.keys():
-            return definitions._functions[op].alg(iArgs[1:])
-        else:
-            return False
+            result = definitions._functions[op].alg(iArgs[1:])
+            logging.debug('Evaluate function: ' + op + ', arguments: ' + \
+                          ', '.join([ str(arg) for arg in iArgs[1:] ]) + ';')
+
+        return result
     
     def evaluate(self, iExpr):
         '''
@@ -31,6 +37,8 @@ class Evaluator(object):
         This function computes @iExpr
         Return value: int or float or bool 
         '''
+        logging.info('Evaluator started.')
+
         stack = []
         for ident in iExpr:
             if (ident.type == 'num'):

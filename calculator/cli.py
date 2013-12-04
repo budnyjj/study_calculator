@@ -13,7 +13,7 @@ def main():
 
                 while (iExpr != ''):
                         try:
-                                oExpr = c.calculate(iExpr)
+                                oExpr = c.calculate(iExpr, 'warning')
                         except calc.parser.ParseError as e:
                                 print "ParseError:", e
                         except calc.converter.ConvertError as e:
