@@ -8,7 +8,7 @@ works correctly with brackets.
 installation
 ------------
 ```bash
-# python setup.py install
+python setup.py install
 ```
 
 usage
@@ -38,7 +38,7 @@ import calculator.definitions as defs
 c = calc.Calculator()
 c.calculate('sin(pi)') # == 0
 
-defs._constants['pi'] = defs.Constant(value = 1.5707963) # pi/2
+defs._constants['pi'] = defs.Constant(value = 1.5707963) # == pi/2
 c.calculate('sin(pi)') # == 1
 ```
 
