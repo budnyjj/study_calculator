@@ -22,12 +22,14 @@ class Evaluator(object):
         result = False
         if op in definitions._operators.keys():
             result = definitions._operators[op].alg(iArgs[1:])
-            logging.debug('Evaluate operator: ' + op + ', arguments: ' + \
-                          ', '.join([ str(arg) for arg in iArgs[1:] ]) + ';')
+            logging.debug('Evaluate operator: ' + op + ' with arguments: (' + \
+                          ', '.join([ str(arg) for arg in iArgs[1:] ]) + \
+                          '); result: ' + str(result) + ';')
         elif op in definitions._functions.keys():
             result = definitions._functions[op].alg(iArgs[1:])
-            logging.debug('Evaluate function: ' + op + ', arguments: ' + \
-                          ', '.join([ str(arg) for arg in iArgs[1:] ]) + ';')
+            logging.debug('Evaluate function: ' + op + ' with arguments: (' + \
+                          ', '.join([ str(arg) for arg in iArgs[1:] ]) + \
+                          '); result: ' + str(result) + ';')
 
         return result
     

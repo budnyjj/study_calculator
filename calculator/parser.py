@@ -36,8 +36,10 @@ class Parser(object):
         @parsedExpr -- output parsed expression
         '''
 
-        statMsg = 'Parser started.\n'
-        
+        logging.info('Parser started.')
+        logging.debug('Parser IO:')
+        logging.debug('Input: ' + iExpr)
+
         parsedExpr = []
         curPos = 0
 
@@ -55,19 +57,18 @@ class Parser(object):
                     break
                 elif matcher == self.matchers[-1]:
                     # can't find suitable matcher
+                    logging.debug('Output: ' + ', '.join([ str(ident.val) for ident in parsedExpr ]) + '.')
                     raise ParseError(iExpr, curPos)
+                    
 
-        debugMsg = 'Parser IO:\n'
-        debugMsg += 'Input: ' + iExpr + ',\n'
-        debugMsg += 'Output: ' + ', '.join([ str(ident.val) for ident in parsedExpr ]) + '.'
 
-        logging.debug(debugMsg)
-        
+        logging.debug('Output: ' + ', '.join([ str(ident.val) for ident in parsedExpr ]) + '.')
+
         parseStat = defaultdict(int)
         for ident in parsedExpr:
             parseStat[ident.type] += 1
 
-        statMsg += 'Parser statistics: \n'
+        statMsg = 'Parser statistics: \n'
         statMsg += '- ' + str(parseStat['op']) + ' operators,\n'
         statMsg += '- ' + str(parseStat['func']) + ' functions,\n'
         statMsg += '- ' + str(parseStat['lb']) + ' opening brackets,\n'

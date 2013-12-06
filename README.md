@@ -22,12 +22,9 @@ $ calc
 2. as python class:
 ```python
 import calculator as calc
-c = calc.Calculator()
+c = calc.Calculator(logLevel='error', logFilename='/path/log/file')
 c.calculate("string with math expr")
 ```
-
-It uses logging module, so you can change its
-log level or define output log path.
 
 You can add and/or change existing calculation
 rules on the fly, for example:
@@ -44,3 +41,5 @@ c.calculate('sin(pi)') # == 1
 
 You can add/customize new functions, operators, constants defined
 in calculator/definitions.py. 
+
+See examples/ for examples of usage.
