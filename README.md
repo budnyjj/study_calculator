@@ -42,4 +42,4 @@ c.calculate('sin(pi)') # == 1
 You can add/customize new functions, operators, constants defined
 in calculator/definitions.py. 
 
-See examples/ for examples of usage.
+See 'examples/' folder for examples of calculator usage.

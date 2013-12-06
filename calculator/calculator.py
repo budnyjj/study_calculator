@@ -1,5 +1,5 @@
 import logging
-import os
+from os import getcwd
 
 from singleton import singleton
 
@@ -28,7 +28,7 @@ class Calculator(object):
         LOG_FILENAME = kwargs.get('logFilename', False)
         if LOG_FILENAME:
             if LOG_FILENAME[0] != '/':
-                LOG_FILENAME = os.getcwd() + '/' + LOG_FILENAME
+                LOG_FILENAME = getcwd() + '/' + LOG_FILENAME
             logging.basicConfig(level=LOG_LEVEL, filename=LOG_FILENAME, format=LOG_FORMAT)
         else:
             logging.basicConfig(level=LOG_LEVEL, format=LOG_FORMAT)
