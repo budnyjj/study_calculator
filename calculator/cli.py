@@ -8,13 +8,13 @@ def main():
 	print "Input correct expression and hit <ENTER>."
 	print "Hit <ENTER> twice to quit."
 
-	c = calc.Calculator()
+	c = calc.Calculator(logLevel='error')
         try:
                 iExpr = raw_input('> ')
 
                 while (iExpr != ''):
                         try:
-                                oExpr = c.calculate(iExpr, 'error')
+                                oExpr = c.calculate(iExpr)
                         except calc.parser.ParseError as e:
                                 logging.error("ParseError: " + str(e))
                         except calc.converter.ConvertError as e:
@@ -26,7 +26,7 @@ def main():
                         except ValueError as e:
                                 logging.error("ValueError: " + str(e))
                         else:
-                                print oExpr
+                                print '=', oExpr
 
                         iExpr = raw_input('> ')
         except EOFError:
