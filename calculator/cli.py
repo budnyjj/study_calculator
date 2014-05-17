@@ -1,6 +1,10 @@
 #!/usr/bin/python2
 
+<<<<<<< HEAD
 import curses
+=======
+import logging
+>>>>>>> c8a6e489b4764ad2e947765209b654b5e758c32f
 import calculator as calc
 
 class Curses_screen:
@@ -155,6 +159,7 @@ def main():
     #   print oExpr
     #   iExpr = raw_input('> ')
 
+<<<<<<< HEAD
         # iExpr = ""
         # while True:
         #         c = stdscr.getch()
@@ -166,6 +171,31 @@ def main():
         #                 curses.addstr(oExpr)
 
     # print 'Quitting...'
+=======
+	c = calc.Calculator(logLevel='error')
+        try:
+                iExpr = raw_input('> ')
+
+                while (iExpr != ''):
+                        try:
+                                oExpr = c.calculate(iExpr)
+                        except calc.parser.ParseError as e:
+                                logging.error("ParseError: " + str(e))
+                        except calc.converter.ConvertError as e:
+                                logging.error("ConvertError: " + str(e))
+                        except calc.evaluator.EvaluateError as e:
+                                logging.error("EvaluateError: " + str(e))
+                        except ArithmeticError as e:
+                                logging.error("ArithmeticError: " + str(e))
+                        except ValueError as e:
+                                logging.error("ValueError: " + str(e))
+                        else:
+                                print '=', oExpr
+
+                        iExpr = raw_input('> ')
+        except EOFError:
+                pass
+>>>>>>> c8a6e489b4764ad2e947765209b654b5e758c32f
 
         # curses.nocbreak()
         # stdscr.keypad(0)

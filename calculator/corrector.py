@@ -1,11 +1,12 @@
 import re
 import math
+import logging
+
 import definitions
 
+# basic error
 def CorrectorError(Exception):
-    def __init__(self, expr, msg):
-        self.expr = expr
-        self.msg = msg
+    pass
 
 class Corrector(object):
     def __init__(self):
@@ -223,12 +224,20 @@ _functions, key=lambda func: len(func), reverse=True)] \
             result = unaryMinusBracketM.search(self._expr)
 
     def correct(self, iExpr):
+        logging.info('Corrector started.')
+        debugMsg = 'Corrector IO: \n'
+        debugMsg += 'Input: ' + iExpr + ',\n'
+
         self._expr = iExpr.replace(' ', '').lower()
         self._shortMultiplication()
         self._constInterpolation()
         self._plusMinusReduce()
         self._unaryPlusReduce()
         self._unaryMinusReduce()
+
+        debugMsg += 'Output: ' + self._expr + '.'
+        logging.debug(debugMsg)
+
         return self._expr
 
 

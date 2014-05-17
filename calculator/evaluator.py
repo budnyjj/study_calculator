@@ -1,29 +1,46 @@
+import logging
 import definitions
 
+class EvaluateError(Exception):
+    def __init__(self, eIdent, eArgCount, argCount):
+        self.ident = eIdent
+        self.eArgCount = eArgCount
+        self.argCount = argCount
+
+    def __str__(self):
+        msg = 'too less arguments for ' + str(self.ident) + ' -- ' 
+        msg += 'requires: ' + str(self.argCount) + ', provided: ' + str(self.eArgCount)
+        return msg
 
 class Evaluator(object):
-    def __init__(self):
-        pass
-
     def _eval(self, iArgs):
         '''
         @iExpr -- list, describes function or operator (iExpr[0]) with its arguments (iExpr[>0])
         Return value: Identifier -- result of evaluating 
         '''
         op = iArgs[0]
+        result = False
         if op in definitions._operators.keys():
-            return definitions._operators[op].alg(iArgs[1:])
+            result = definitions._operators[op].alg(iArgs[1:])
+            logging.debug('Evaluate operator: ' + op + ' with arguments: (' + \
+                          ', '.join([ str(arg) for arg in iArgs[1:] ]) + \
+                          '); result: ' + str(result) + ';')
         elif op in definitions._functions.keys():
-            return definitions._functions[op].alg(iArgs[1:])
-        else:
-            return False
+            result = definitions._functions[op].alg(iArgs[1:])
+            logging.debug('Evaluate function: ' + op + ' with arguments: (' + \
+                          ', '.join([ str(arg) for arg in iArgs[1:] ]) + \
+                          '); result: ' + str(result) + ';')
+
+        return result
     
     def evaluate(self, iExpr):
         '''
-        @iExpr -- math string in RPN (tuple)
+        @iExpr -- math string in RPN (list)
         This function computes @iExpr
         Return value: int or float or bool 
         '''
+        logging.info('Evaluator started.')
+
         stack = []
         for ident in iExpr:
             if (ident.type == 'num'):
@@ -36,8 +53,7 @@ class Evaluator(object):
                     nArgs = definitions._functions[ident.val].argCount
                 args = []
                 if (len(stack) < nArgs):
-                    print "Error: too less arguments!"
-                    return False
+                    raise EvaluateError(ident.val, len(stack), nArgs)
                 else:
                     for i in range(nArgs):
                         args.append(stack.pop().val)

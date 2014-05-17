@@ -1,4 +1,10 @@
+import logging
+
 import definitions
+
+class ConvertError(Exception):
+    def __str__(self):
+        return 'cannot convert input expression to RPN due to mismatched parentheses'
 
 class Converter(object):
     def __init__(self):
@@ -9,6 +15,8 @@ class Converter(object):
         @iExpr -- parsed math string (list)
         This function converts @iExpr to list in RPN
         '''
+        logging.info('Converter started.')
+
     	stack = []
     	convertedExpr = []
     	
@@ -45,22 +53,23 @@ class Converter(object):
     	                convertedExpr.append(stack.pop())
     	            else:
     	                break
-    	        if (stack[-1].type != 'lb'):
-    	            print "Error: parentheses mismatched!"
-    	            return ()
+    	        if (len(stack) == 0):
+                    raise ConvertError()
     	        else:
     	            stack.pop()
     	        if (len(stack) > 0):
     	            if (stack[-1].type == 'func'):
     	                convertedExpr.append(stack.pop())
-    	    else:
-    	        print "Error: unknown token: ", ident
-    	        return ()
     	
     	while (len(stack) > 0):
     	    if stack[-1].type in ('lb', 'rb'):
-    	        print "Error: parentheses mismatched!"
-    	        return ()
+                raise ConvertError()
     	    convertedExpr.append(stack.pop())
     	
+        debugMsg = 'Converter IO:\n'
+        debugMsg += 'Input: ' + ', '.join([ str(ident.val) for ident in iExpr ]) + ',\n'
+        debugMsg += 'Output: ' + ', '.join([ str(ident.val) for ident in convertedExpr ]) + '.'
+
+        logging.debug(debugMsg)
+
     	return convertedExpr

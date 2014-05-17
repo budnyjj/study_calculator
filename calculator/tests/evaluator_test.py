@@ -41,5 +41,10 @@ class TestEvaluate(unittest.TestCase):
         self.assertEqual("%.4f" % self.evaluate("log(2.71828182846)"), '1.0000')
         self.assertEqual(self.evaluate("log10(10)"), 1) 
 
+    def testEvaluatorError(self):
+        # arguments count error
+        self.assertRaises(evaluator.EvaluateError, self.evaluate, "sqrt()" )
+        self.assertRaises(evaluator.EvaluateError, self.evaluate, "3+" )
+
 if __name__ == '__main__':
     unittest.main()

@@ -101,5 +101,15 @@ class TestConverter(unittest.TestCase):
         self.assertEqual(convertedExpr[4].type, 'func')
         self.assertEqual(convertedExpr[4].val, 'sin')
 
+    def testConverterError(self):
+        # mismatched parentheses
+        iExpr = "(2*(1)"
+        parsedExpr = self.parser.parse(iExpr)
+        self.assertRaises(converter.ConvertError, self.converter.convert, parsedExpr)
+
+        iExpr = "2*(1))"
+        parsedExpr = self.parser.parse(iExpr)
+        self.assertRaises(converter.ConvertError, self.converter.convert, parsedExpr)
+
 if __name__ == '__main__':
     unittest.main()
