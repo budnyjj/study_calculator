@@ -1,13 +1,18 @@
 #!/usr/bin/python2
 
+import readline
 import logging
 import calculator as calc
+
+def readline_configure():
+    readline.parse_and_bind('tab: complete')
 
 def main():
     help_msg = \
 "This is calculator for basic math expressions.\n\
 Input correct expression and press <ENTER>.\n\
-Write 'quit', 'exit' or 'q' to exit."
+Press 'q <Enter>' to exit."
+    readline_configure()
 
     c = calc.Calculator()
     
